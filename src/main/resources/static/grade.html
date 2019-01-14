@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h4>班级列表</h4>
+		<table border="1" width="500" style="border-color:#ccc" cellpadding="1" cellspacing="1">
+			<thead style="background-color:#ccc">
+				<th>编号</th>
+				<th>班级</th>
+			
+				<th>操作</th>
+			</thead>
+			<tbody id="content">
+				
+			</tbody>
+		</table>
+</body>
+<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+$(function(){
+	show();
+})
+	function show(){
+		$.ajax({
+			url:"/api/grades",
+			dataType:"json",
+			type:"get",
+			success:function(res){
+				 $("#content").empty();
+				$.each(res,function(i,obj){
+					var tr="<tr><td>"+obj.id+"</td><td>"+obj.name+"</td><td ><a href='javascript:void(0)'onclick=del("+obj.id+",\""+obj.name+"\",this)>删除</a><a href='javascript:void(0)' onclick='look(this,\""+obj.name+"\","+obj.id+")'>查看</a></td>	</tr>";
+					$("#content").append(tr);
+				}) 
+			}
+		})
+	}
+	
+	function del(id,name,t){
+		$.getJSON("/api/grades/grade/studentcount/"+id,function(res){
+			if(confirm(name+"班级下还有"+res+"名同学,删除班级会删除所有同学，你确定删除吗")){
+				 $.ajax({
+						url:"/api/grades/grade/"+id,
+						dataType:"json",
+						type:"delete",
+						success:function(res){
+							if(res.code=="200"){
+								alert(res.msg);
+									show();
+								}
+							}					
+					}) 
+			}
+		})
+	}
+	
+	function look(t,name,id){
+		window.sessionStorage.setItem("gname",name);
+		window.sessionStorage.setItem("gid",id);
+		location.href="student.html";
+	}
+</script>
+</html>

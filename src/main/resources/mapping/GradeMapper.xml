@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.dao.IGradeDao">
+	<select id="queryGradeList" resultType="Grade">
+		select * from grade
+	</select>
+	<select id="queryStudentAll" resultType="student">
+		select * from student where gradeid=#{gid}
+	</select>
+	
+	<delete id="delStudent">
+		delete from student where uid=#{uid}
+	</delete>
+	
+	<delete id="delGrade">
+		delete from grade where id=#{gid};
+			
+	</delete>
+	
+	<delete id="delStudentAll">
+		delete from student where gradeid=#{gid}
+		
+	</delete>
+	
+	<select id="countStudent" resultType="int">
+		select count(*) from student where gradeid=#{gid}
+	</select>
+</mapper>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		
+	</head>
+	<body>
+		<h4>学生列表<lable>[java21]</lable> <a href="grade.html">班级列表</a></h4>
+		<table border="1" width="500" style="border-color:#ccc" cellpadding="1" cellspacing="1">
+			<thead style="background-color:#ccc">
+				<th>编号</th>
+				<th>姓名</th>
+				<th>出生日期</th>
+				<th>操作</th>
+			</thead>
+			<tbody id="content">
+				
+			</tbody>
+		</table>
+	</body>
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+var name=window.sessionStorage.getItem("gname");
+var gid=window.sessionStorage.getItem("gid");
+if(name!=null){
+	$("h4").find("lable").text("["+name+"]");
+}
+$(function(){
+	show();
+})
+	function show(){
+		$.ajax({
+			url:"/api/grades/grade/student/"+gid,
+			dataType:"json",
+			type:"get",
+			success:function(res){
+				 $("#content").empty();
+				$.each(res,function(i,obj){
+					var tr="<tr><td>"+obj.uid+"</td><td>"+obj.uname+"</td><td>"+obj.birth+"</td><td ><a href='javascript:void(0)'onclick=del("+obj.uid+",this)>删除</a></td>	</tr>";
+					$("#content").append(tr);
+				}) 
+			}
+		})
+	}
+	
+	function del(id,t){
+		
+			if(confirm("你确定删除学生信息吗")){
+				 $.ajax({
+						url:"/api/grades/grade/delstudent/"+id,
+						dataType:"json",
+						type:"delete",
+						success:function(res){
+							if(res.code=="200"){
+								alert(res.msg);
+									show();
+								}
+							}					
+					}) 
+			}
+		
+	}
+</script>
+</html>
